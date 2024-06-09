@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Справочник материалов</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Справочник материалов</h1>
+        <h2>Добавить материал</h2>
+        <form method="post" class="form-inline">
+            {% csrf_token %}
+            <div class="form-group mb-2">
+                <label for="name" class="sr-only">Наименование материала</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Наименование материала" required>
+            </div>
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="price_per_unit" class="sr-only">Цена за единицу</label>
+                <input type="number" step="0.01" class="form-control" id="price_per_unit" name="price_per_unit" placeholder="Цена за единицу" required>
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Добавить</button>
+        </form>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Наименование</th>
+                    <th>Цена за единицу</th>
+                    <th>Действие</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for material in materials %}
+                <tr>
+                    <td>{{ material.id }}</td>
+                    <td>{{ material.name }}</td>
+                    <td>{{ material.price_per_unit }}</td>
+                    <td>
+                        <form method="post" action="{% url 'delete_material' material.id %}" style="display:inline-block;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+<h2>Добавить сотрудника</h2>
+<form method="post" class="form-inline">
+    {% csrf_token %}
+    <div class="form-group mb-2">
+        <label for="employee_name" class="sr-only">Имя сотрудника</label>
+        <input type="text" class="form-control" id="employee_name" name="employee_name" placeholder="Имя сотрудника" required>
+    </div>
+    <div class="form-group mx-sm-3 mb-2">
+        <label for="employee_position" class="sr-only">Должность</label>
+        <select class="form-control" id="employee_position" name="employee_position" required>
+            {% for position in positions %}
+                   <option value="{{ position }}">{{ position }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary mb-2">Добавить</button>
+</form>
+
+        <hr>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Сотрудник</th>
+                    <th>Должность</th>
+                    <th>Действие</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee in employees %}
+                <tr>
+                    <td>{{ employee.id }}</td>
+                    <td>{{ employee.name }}</td>
+                    <td>{{ employee.position }}</td>
+                    <td>
+                        <form method="post" action="{% url 'delete_employee' employee.id %}" style="display:inline-block;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+<div>
+
+</div>
+</body>
+</html>

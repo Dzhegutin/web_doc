@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная страница</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f9fa;
+        }
+        .main-container {
+            text-align: center;
+        }
+        .main-container h1 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+        }
+        .btn-container {
+            display: flex;
+            justify-content: space-around;
+        }
+        .btn {
+            font-size: 1.5rem;
+            padding: 1rem 2rem;
+            margin: 0 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <h1>Добро пожаловать в редактор документов!</h1>
+        <div class="btn-container">
+            <a href="{% url 'create_writeoff_act' %}" class="btn btn-primary">Создать документ</a>
+            <a href="{% url 'list_writeoff_acts' %}" class="btn btn-secondary">Просмотр документов</a>
+            <a href="{% url 'manage_materials' %}" class="btn btn-info">Справочник</a>
+        </div>
+    </div>
+</body>
+</html>

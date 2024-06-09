@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создать акт списания</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+</head>
+<body>
+    <div class="container mt-5">
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group row">
+                <label for="general_director" class="col-sm-2 col-form-label">Утверждаю:</label>
+
+            </div>
+            {% for e in empl %}
+<div class="form-group row">
+    <label for="general_director" class="col-sm-2 col-form-label" style="text-align: right;">Генеральный директор:</label>
+    <div class="col-sm-10">
+        {{ e.general_director }}
+    </div>
+</div>
+
+            <div class="form-group row">
+                <label for="date" class="col-sm-2 col-form-label">Дата:</label>
+                <div class="col-sm-10">
+                    {{ act_form.date }}
+                </div>
+            </div>
+            <h2 class="text-center">АКТ № {{ e.id }}</h2>
+            <h3 class="text-center">О СПИСАНИИ ТОВАРНО-МАТЕРИАЛЬНЫХ ЦЕННОСТЕЙ</h3>
+            <p>Комиссия в составе:</p>
+            <div class="form-group row">
+                <label for="chief_accountant" class="col-sm-2 col-form-label">Главный бухгалтер:</label>
+                <div class="col-sm-10">
+                    {{ e.chief_accountant }}
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="storekeeper" class="col-sm-2 col-form-label">Кладовщик:</label>
+                <div class="col-sm-10">
+                    {{e.storekeeper }}
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="executive_director" class="col-sm-2 col-form-label">Исполнительный директор:</label>
+                <div class="col-sm-10">
+                    {{ e.executive_director }}
+                </div>
+
+            </div>
+             {% endfor %}
+            <p>Произвела списание материалов в связи с их непригодностью для дальнейшего использования.</p>
+            <table id="items-table" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>№ п/п</th>
+                        <th>Наименование материала</th>
+                        <th>Количество</th>
+                        <th>Сумма</th>
+                        <th>Причина списания</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% for product in products %}
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ product.material }}</td>
+                        <td>{{ product.quantity }}</td>
+                         <td>{{ product.material.price_per_unit }}</td>
+                        <td>{{ product.reason }}</td>
+                    </tr>
+                </tbody>
+                   {% endfor %}
+            </table>
+
+            <div class="form-group row mt-3">
+                <label for="total_sum" class="col-sm-2 col-form-label">Всего на сумму:</label>
+                <div class="col-sm-10">
+{{ total_sum }}
+                </div>
+            </div>
+
+            <a href="{% url 'list_writeoff_acts' %}" class="btn btn-success">Назад</a>
+
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#id_date').datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                todayHighlight: true
+            });
+
+            calculateTotalSum();
+            $('#items-table').on('input', 'input[name="quantity"], input[name="price"]', calculateTotalSum);
+        });
+
+        function addRow() {
+            const table = document.getElementById('items-table').getElementsByTagName('tbody')[0];
+            const newRow = table.rows[0].cloneNode(true);
+            const inputs = newRow.getElementsByTagName('input');
+            for (let i = 0; i < inputs.length; i++) {
+                inputs[i].value = '';
+            }
+            newRow.cells[0].innerText = table.rows.length + 1;
+            table.appendChild(newRow);
+            calculateTotalSum();
+        }
+
+       function removeRow(button) {
+            const row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+            updateRowNumbers();
+            calculateTotalSum();
+        }
+
+        function updateRowNumbers() {
+            const table = document.getElementById('items-table').getElementsByTagName('tbody')[0];
+            for (let i = 0; i < table.rows.length; i++) {
+                table.rows[i].cells[0].innerText = i + 1;
+            }
+        }
+
+        function calculateTotalSum() {
+            const table = document.getElementById('items-table').getElementsByTagName('tbody')[0];
+            let totalSum = 0;
+            for (let i = 0; i < table.rows.length; i++) {
+                const quantity = parseFloat(table.rows[i].getElementsByTagName('input')[0].value) || 0;
+                const price = parseFloat(table.rows[i].getElementsByTagName('input')[1].value) || 0;
+                totalSum += quantity * price;
+            }
+            document.getElementById('total_sum').value = totalSum.toFixed(2);
+        }
+    </script>
+</body>
+</html>

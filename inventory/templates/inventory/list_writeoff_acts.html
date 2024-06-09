@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Просмотр документов</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Список документов</h1>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Дата</th>
+                    <th>Главный бухгалтер</th>
+                    <th>Кладовщик</th>
+                    <th>Исполнительный директор</th>
+                    <th>Генеральный директор</th>
+                    <th>Общая сумма</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for act in acts %}
+                <tr>
+                    <td>{{ act.id }}</td>
+                    <td>{{ act.date }}</td>
+                    <td>{{ act.chief_accountant }}</td>
+                    <td>{{ act.storekeeper }}</td>
+                    <td>{{ act.executive_director }}</td>
+                    <td>{{ act.general_director }}</td>
+                    <td>{{ act.total_amount }}</td>
+                    <td>
+                        <a href="{% url 'delete_act' act.id %}" class="btn btn-primary" onclick="return confirm('Вы уверены в своем действии?')">Удалить</a>
+                        <a href="{% url 'edit_writeoff_act' act.id %}" class="btn btn-success">Просмотреть</a>
+                        <a href="{% url 'print_act' act.id %}" class="btn btn-info" target="_blank">Печать</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Печать акта списания</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        @media print {
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="no-print mb-3">
+            <button class="btn btn-primary" onclick="window.print()">Печать</button>
+            <a href="{% url 'list_writeoff_acts' %}" class="btn btn-success">Назад</a>
+        </div>
+        <h2 class="text-center">АКТ № {{ act.id }}</h2>
+        <h3 class="text-center">О СПИСАНИИ ТОВАРНО-МАТЕРИАЛЬНЫХ ЦЕННОСТЕЙ</h3>
+        <p>Дата: {{ act.date }}</p>
+        <p>Комиссия в составе:</p>
+        <p>Главный бухгалтер: {{ act.chief_accountant }}</p>
+        <p>Кладовщик: {{ act.storekeeper }}</p>
+        <p>Исполнительный директор: {{ act.executive_director }}</p>
+        <p>Генеральный директор: {{ act.general_director }}</p>
+        <p>Произвела списание материалов в связи с их непригодностью для дальнейшего использования.</p>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>№ п/п</th>
+                    <th>Наименование материала</th>
+                    <th>Количество</th>
+                    <th>Сумма</th>
+                    <th>Причина списания</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ item.material }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.total_price }}</td>
+                    <td>{{ item.reason }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p>Всего на сумму: {{ total_sum }}</p>
+    </div>
+</body>
+</html>

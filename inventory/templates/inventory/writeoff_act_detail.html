@@ -1,0 +1,40 @@
+<!-- inventory/templates/inventory/writeoff_act_detail.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Акт списания</title>
+</head>
+<body>
+    <h1>АКТ №{{ act.id }} О СПИСАНИИ ТОВАРНО-МАТЕРИАЛЬНЫХ ЦЕННОСТЕЙ</h1>
+    <p>Дата: {{ act.date }}</p>
+    <p>Генеральный директор: {{ act.general_director }}</p>
+    <p>Главный бухгалтер: {{ act.chief_accountant }}</p>
+    <p>Кладовщик: {{ act.storekeeper }}</p>
+    <p>Исполнительный директор: {{ act.executive_director }}</p>
+    <table>
+        <thead>
+            <tr>
+                <th>№ п/п</th>
+                <th>Наименование материала</th>
+                <th>Количество</th>
+                <th>Сумма</th>
+                <th>Причина списания</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in act.items.all %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ item.material.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.total_price }}</td>
+                <td>{{ item.reason }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p>Всего на сумму: {{ act.total_amount }} (Сумма прописью)</p>
+</body>
+</html>
